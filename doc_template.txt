@@ -1,0 +1,12 @@
+/**
+ * @brief Brief description of the function.
+ * 
+ * Detailed description of the function, including its purpose, behavior, and any important details.
+ * Mention any assumptions, limitations, or dependencies.
+ * 
+ * @param param1 Description of parameter 1.
+ * @param param2 Description of parameter 2.
+ * @param ... Additional parameters if any.
+ * 
+ * @return Description of the return value (if any). Include possible return values and conditions.
+ */

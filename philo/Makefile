@@ -1,6 +1,8 @@
 NAME := philo
 
-SRC := src/main.c \
+SRC :=	src/main.c \
+		src/error.c \
+		src/utils/utils1.c \
 
 OBJ := $(SRC:.c=.o)
 

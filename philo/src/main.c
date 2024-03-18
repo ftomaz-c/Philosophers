@@ -6,28 +6,41 @@
 /*   By: ftomazc < ftomaz-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 14:21:30 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/03/18 15:21:22 by ftomazc          ###   ########.fr       */
+/*   Updated: 2024/03/18 17:41:33 by ftomazc          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/philo.h"
 
+void	init_sim(t_sim *sim, char **argv)
+{
+	sim->num_of_philosophers = ft_atoi(argv[1]);
+	sim->time_to_die = ft_atoi(argv[2]);
+	sim->time_to_eat = ft_atoi(argv[3]);
+	sim->time_to_sleep = ft_atoi(argv[4]);
+	if (argv[5])
+		sim->philosophers_meal_count = ft_atoi(argv[5]);
+	else
+		sim->philosophers_meal_count = 0;
+	
+	printf("num: %i\n", sim->num_of_philosophers);
+	printf("die: %i\n", sim->time_to_die);
+	printf("eat: %i\n", sim->time_to_eat);
+	printf("sleep: %i\n", sim->time_to_sleep);
+	printf("meals: %i\n", sim->philosophers_meal_count);
+
+}
+
 int	main(int argc, char **argv)
 {
-	(void)argv;
-	if (argc < 5)
-	{
-		ft_putstr_fd(RED"Error: Not enough arguments provided.\n"DEFAULT,
-		 STDERR_FILENO);
-		ft_putstr_fd(YELLOW"Usage: ./philo arg1 arg2 arg3 arg4 arg5(optional)\n\
-"DEFAULT, STDERR_FILENO);
-		ft_putstr_fd("arg1: number_of_philosophers\n", STDERR_FILENO);
-		ft_putstr_fd("arg2: time_to_die (in milliseconds)\n", STDERR_FILENO);
-		ft_putstr_fd("arg3: time_to_eat (in milliseconds)\n", STDERR_FILENO);
-		ft_putstr_fd("arg4: time_to_sleep (in milliseconds)\n", STDERR_FILENO);
-		ft_putstr_fd("arg5: number_of_times_each_philosopher_must_eat (optional\
-argument)\n", STDERR_FILENO);
+	struct timeval	start;
+	t_sim			sim;
+	//t_philosopher	*philosophers;
+	//pthread_t		*thread_id;
+	
+	if (error_check(argc, argv))
 		exit (EXIT_FAILURE);
-	}
-	return(0);
+	init_sim(&sim, argv);
+	gettimeofday(&start, NULL);
+	return(EXIT_SUCCESS);
 }

@@ -84,6 +84,17 @@ example: `./philo 5 800 200 200`
 
 - Concurrency is not just about doing things faster; it's also about designing programs that can handle multiple tasks at once, making them more responsive and efficient. In the world of software development, mastering concurrency is essential for building high-performance applications that make the most of the underlying hardware.
 
+### Problem Solution
+
+The Chandy/Misra solution (1980s) modernizes the Dining Philosophers Problem by introducing a method that allows any number of philosophers to dine together without a central authority dictating their actions. Unlike the original approach (Dijkstra) where philosophers silently try to eat without coordinating, this solution involves direct communication between philosophers through message passing:
+
+- Decentralized System: Each philosopher operates independently, making the solution scalable to any number of participants and resources.
+- Communication for Coordination: Philosophers send and receive requests for forks, coordinating with each other to ensure everyone can eat.
+- Dirty and Clean Forks: Forks are labeled as "dirty" or "clean" to manage their use efficiently and prevent deadlock, where no philosopher can eat.
+- Avoids Deadlocks and Starvation: By requiring philosophers to request forks and pass them only when not needed, the system ensures all philosophers get a chance to eat, preventing both deadlock and starvation.
+
+This approach acknowledges the practical need for communication in solving complex concurrency issues, making it a robust solution for distributed systems where resources must be shared efficiently among multiple processes.
+
 ## 4. External functions
 
 ### Memory and Output Functions
