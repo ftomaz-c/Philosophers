@@ -1,0 +1,8 @@
+#.o
+*.o
+
+#philo
+philo/philo
+
+#.vscode
+.vscode
