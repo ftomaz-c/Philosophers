@@ -13,6 +13,7 @@
 2. [Usage](#2-usage)
 3. [Features to implement](#3-features-to-implement)
 	- [Concurrency](#concurrency)
+ 	- [Problem Solution](#problem-solution)
 4. [External functions](#4-external-functions)
 	- [Memory and Output Functions](#memory-and-output-functions)
 	- [Time Function](#time-function)
