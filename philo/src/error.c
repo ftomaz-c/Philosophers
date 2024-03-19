@@ -6,7 +6,7 @@
 /*   By: ftomazc < ftomaz-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 15:25:59 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/03/18 16:43:08 by ftomazc          ###   ########.fr       */
+/*   Updated: 2024/03/19 10:31:06 by ftomazc          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@ void	error_message(int err, char *str)
 		ft_putstr_fd(str, STDERR_FILENO);
 		error_message = " is an invalid argument.\n"DEFAULT;
 	}
+	else if (err == 4)
+		error_message = "Arguments must be positive integers.\n"DEFAULT;
+	else if (err == 5)
+		error_message = "Failed to create thread\n"DEFAULT;
 	else
 		error_message = "Unexpected error occurred.\n"DEFAULT;
 	ft_putstr_fd(error_message, STDERR_FILENO);
