@@ -6,7 +6,7 @@
 /*   By: ftomazc < ftomaz-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 11:05:52 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/03/20 11:42:36 by ftomazc          ###   ########.fr       */
+/*   Updated: 2024/03/20 12:33:16 by ftomazc          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,6 @@
 
 void	cleanup_simulation(t_sim *sim)
 {
-	int	i;
-
-	i = 0;
-	while (i < sim->num_of_philosophers)
-	{
-		pthread_mutex_destroy(&sim->forks[i]);
-		i++;
-	}
-	free(sim->forks);
 	free(sim->threads);
 }
 
@@ -54,19 +45,16 @@ void	config_sim(t_sim *sim, char **argv)
 
 int	setup_simulation(t_sim *sim, char **args)
 {
-	int	i;
-
 	config_sim(sim, args);
 	gettimeofday(&sim->sim_time, NULL);
-	sim->forks = malloc(sim->num_of_philosophers * sizeof(pthread_mutex_t));
-	if (!sim->forks)
+	sim->philosopher = malloc(sim->num_of_philosophers * sizeof(t_philo));
+	if (!sim->philosopher)
 		return (0);
-	i = 0;
-	while (i < sim->num_of_philosophers)
+	sim->threads = malloc(sim->num_of_philosophers * sizeof(pthread_t));
+	if (!sim->philosopher)
 	{
-		if (pthread_mutex_init(&sim->forks[i], NULL) != 0)
-			exit (EXIT_FAILURE);
-		i++;
+		free(sim->philosopher);
+		return (0);
 	}
 	return (1);
 }

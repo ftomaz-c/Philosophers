@@ -58,7 +58,6 @@ int		ft_isdigit(char	*str);
  */
 int		ft_atoi(char *str);
 
-void	init_philosopher(t_sim *sim, t_philo *philo, int i);
 long	elapsed_time(t_sim *sim);
 void	print_stats(t_sim *sim, t_philo *philo);
 

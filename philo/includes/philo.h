@@ -28,13 +28,14 @@ int		setup_simulation(t_sim *sim, char **args);
 
 /*routine.c*/
 void	*philosopher_routine(void *arg);
+int		init_fork(t_philo *philo);
+int		init_philosopher(t_sim *sim, t_philo *philo, int i);
 int		start_simulation(t_sim *sim);
 
 /*actions.c*/
 void	philosopher_is_eating(t_sim *sim, t_philo *philo);
 void	philosopher_is_sleeping(t_sim *sim, t_philo *philo);
-void	philosopher_requests_left_fork(t_sim *sim, t_philo *philo);
-void	philosopher_requests_right_fork(t_sim *sim, t_philo *philo);
+void	philosopher_fork_request(t_sim *sim, t_philo *philo);
 void	philosopher_dies(t_sim *sim, t_philo *philo);
 
 #endif

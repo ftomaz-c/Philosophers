@@ -6,7 +6,7 @@
 /*   By: ftomazc < ftomaz-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 14:21:30 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/03/20 11:42:21 by ftomazc          ###   ########.fr       */
+/*   Updated: 2024/03/20 12:19:13 by ftomazc          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int	main(int argc, char **argv)
 	if (!start_simulation(&sim))
 	{
 		ft_putstr_fd("Failed to start simulation.\n", STDERR_FILENO);
-		free(sim.forks);
 		exit(EXIT_FAILURE);
 	}
 	cleanup_simulation(&sim);

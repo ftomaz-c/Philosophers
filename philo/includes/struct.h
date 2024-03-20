@@ -3,6 +3,14 @@
 
 # include "philo.h"
 
+typedef struct	s_philo t_philo;
+
+typedef struct	s_fork
+{
+	bool			clean;
+	pthread_mutex_t	*mutex;
+}	t_fork;
+
 typedef struct	s_sim
 {
 	int				num_of_philosophers;
@@ -10,18 +18,18 @@ typedef struct	s_sim
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				philosophers_meal_count;
-	bool			sim_stop;
+	t_philo			*philosopher;
 	pthread_t		*threads;
-	pthread_mutex_t	*forks;
 	struct timeval	sim_time;
+	bool			sim_stop;
 }	t_sim;
 
 typedef struct	s_philo
 {
 	int		id;
 	int		meals_eaten;
-	int		left_fork;
-	int		right_fork;
+	t_fork	*fork;
+	bool	has_fork;
 	long	time_since_last_meal;
 	bool	died;
 	t_sim	*sim;

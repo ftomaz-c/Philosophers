@@ -6,7 +6,7 @@
 /*   By: ftomazc < ftomaz-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 11:07:18 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/03/20 11:09:26 by ftomazc          ###   ########.fr       */
+/*   Updated: 2024/03/20 13:44:10 by ftomazc          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,28 +29,74 @@ void	*philosopher_routine(void *arg)
 			philosopher_dies(sim, philo);
 			break;
 		}
-		philosopher_requests_left_fork(sim, philo);
-		philosopher_requests_right_fork(sim, philo);
+		philosopher_fork_request(sim, philo);
 		philosopher_is_eating(sim, philo);
 		philosopher_is_sleeping(sim, philo);
 	}
 	return (NULL);
 }
 
+int	init_fork(t_philo *philo)
+{
+	philo->fork = malloc(sizeof(t_fork));
+	if (!philo->fork)
+	{
+		ft_putstr_fd("Error: Failed to allocate memory for philosopher's fork\n"
+		, STDERR_FILENO);
+		return (0);
+	}
+	philo->fork->mutex = malloc(sizeof(pthread_mutex_t));
+	if (!philo->fork->mutex)
+	{
+		ft_putstr_fd("Error: Failed to allocate memory for fork's mutex\n",
+		STDERR_FILENO);
+		return (0);
+	}
+	philo->fork->clean = false;
+	if (philo->id == 0)
+		philo->fork->clean = true;
+	philo->has_fork = true;
+	if (pthread_mutex_init(philo->fork->mutex, NULL) != 0)
+	{
+		ft_putstr_fd("Error: Failed to initiate fork's mutex\n", STDERR_FILENO);
+		return (0);
+	}
+	pthread_mutex_lock(philo->fork->mutex);
+	return (1);
+}
+
+int	init_philosopher(t_sim *sim, t_philo *philo, int i)
+{
+	philo[i].id = i;
+	philo[i].meals_eaten = 0;
+	philo[i].time_since_last_meal = 0;
+	if (!init_fork(&philo[i]))
+	{
+		if (philo[i].fork)
+		{
+			if (philo[i].fork->mutex)
+				free(philo[i].fork->mutex);
+			free(philo[i].fork);
+		}
+		
+		return (0);
+	}
+	philo[i].died = false;
+	philo[i].sim = sim;
+	return (1);
+}
 
 int	start_simulation(t_sim *sim)
 {
 	t_philo *philo;
 	int		i;
 	
-	philo = malloc(sim->num_of_philosophers * sizeof(t_philo));
-	if (!philo)
-		return (0);
-	sim->threads = malloc(sim->num_of_philosophers * sizeof(pthread_t));
+	philo = sim->philosopher;
 	i = 0;
 	while (i < sim->num_of_philosophers)
 	{
-		init_philosopher(sim, philo, i);
+		if (!init_philosopher(sim, philo, i))
+			return (0);
 		if (pthread_create(&sim->threads[i], NULL, philosopher_routine,
 		(void *)&philo[i]))
 		{	

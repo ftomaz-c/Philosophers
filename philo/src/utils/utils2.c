@@ -6,22 +6,11 @@
 /*   By: ftomazc < ftomaz-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 11:06:32 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/03/20 11:09:55 by ftomazc          ###   ########.fr       */
+/*   Updated: 2024/03/20 12:50:26 by ftomazc          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/philo.h"
-
-void	init_philosopher(t_sim *sim, t_philo *philo, int i)
-{
-	philo[i].id = i;
-	philo[i].meals_eaten = 0;
-	philo[i].time_since_last_meal = 0;
-	philo[i].right_fork = philo[i].id;
-	philo[i].left_fork = (philo[i].id + 1) % sim->num_of_philosophers;
-	philo[i].died = false;
-	philo[i].sim = sim;
-}
 
 long	elapsed_time(t_sim *sim)
 {

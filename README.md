@@ -13,7 +13,7 @@
 2. [Usage](#2-usage)
 3. [Features to implement](#3-features-to-implement)
 	- [Concurrency](#concurrency)
- 	- [Problem Solution](#problem-solution)
+ 	- [Problem Solution](#problem-solution-algorithm)
 4. [External functions](#4-external-functions)
 	- [Memory and Output Functions](#memory-and-output-functions)
 	- [Time Function](#time-function)
@@ -85,7 +85,7 @@ example: `./philo 5 800 200 200`
 
 - Concurrency is not just about doing things faster; it's also about designing programs that can handle multiple tasks at once, making them more responsive and efficient. In the world of software development, mastering concurrency is essential for building high-performance applications that make the most of the underlying hardware.
 
-### Problem Solution
+### Problem Solution (Algorithm)
 
 The Chandy/Misra solution (1980s) modernizes the Dining Philosophers Problem by introducing a method that allows any number of philosophers to dine together without a central authority dictating their actions. Unlike the original approach (Dijkstra) where philosophers silently try to eat without coordinating, this solution involves direct communication between philosophers through message passing:
 
