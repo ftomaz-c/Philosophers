@@ -8,6 +8,7 @@
 # include <sys/time.h>
 # include <pthread.h>
 # include <stdbool.h>
+# include "struct.h"
 # include "utils.h"
 
 # define DEFAULT "\033[0m"
@@ -15,33 +16,25 @@
 # define GREEN "\033[32m"
 # define YELLOW "\033[33m"
 
-typedef struct	s_sim
-{
-	int				num_of_philosophers;
-	int				time_to_die;
-	int				time_to_eat;
-	int				time_to_sleep;
-	int				philosophers_meal_count;
-	bool			sim_stop;
-	pthread_t		*threads;
-	pthread_mutex_t	*forks;
-	struct timeval	sim_time;
-}	t_sim;
-
-typedef struct	s_philo
-{
-	int		id;
-	int		meals_eaten;
-	int		left_fork;
-	int		right_fork;
-	long	time_since_last_meal;
-	bool	died;
-	t_sim	*sim;
-}	t_philo;
-
 /*error.c*/
 void	error_message(int err, char *str);
 void	usage_message(void);
 int		error_check(int	argc, char **argv);
+
+/*setup.c*/
+void	cleanup_simulation(t_sim *sim);
+void	config_sim(t_sim *sim, char **argv);
+int		setup_simulation(t_sim *sim, char **args);
+
+/*routine.c*/
+void	*philosopher_routine(void *arg);
+int		start_simulation(t_sim *sim);
+
+/*actions.c*/
+void	philosopher_is_eating(t_sim *sim, t_philo *philo);
+void	philosopher_is_sleeping(t_sim *sim, t_philo *philo);
+void	philosopher_requests_left_fork(t_sim *sim, t_philo *philo);
+void	philosopher_requests_right_fork(t_sim *sim, t_philo *philo);
+void	philosopher_dies(t_sim *sim, t_philo *philo);
 
 #endif
