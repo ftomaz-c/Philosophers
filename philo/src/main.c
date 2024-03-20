@@ -6,7 +6,7 @@
 /*   By: ftomazc < ftomaz-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 14:21:30 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/03/20 12:19:13 by ftomazc          ###   ########.fr       */
+/*   Updated: 2024/03/20 16:08:56 by ftomazc          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,13 @@ int	main(int argc, char **argv)
 		exit (EXIT_FAILURE);
 	if (!setup_simulation(&sim, argv))
 	{
+		cleanup_simulation(&sim);
 		ft_putstr_fd("Failed to setup simulation.\n", STDERR_FILENO);
 		exit(EXIT_FAILURE);
 	}
 	if (!start_simulation(&sim))
 	{
+		cleanup_simulation(&sim);
 		ft_putstr_fd("Failed to start simulation.\n", STDERR_FILENO);
 		exit(EXIT_FAILURE);
 	}

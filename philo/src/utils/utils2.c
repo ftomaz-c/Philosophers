@@ -6,7 +6,7 @@
 /*   By: ftomazc < ftomaz-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 11:06:32 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/03/20 12:50:26 by ftomazc          ###   ########.fr       */
+/*   Updated: 2024/03/20 17:34:12 by ftomazc          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	print_stats(t_sim *sim, t_philo *philo)
 	printf("\t--------------------------------------------------\n");
 	printf("\t-                                                -\n");
 	i = 0;
-	while (i < sim->num_of_philosophers)
+	while (i < sim->num_of_philos)
 	{
 		printf("\t-");
 		if (philo[i].died)
