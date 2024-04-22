@@ -189,6 +189,7 @@ Medium
 
 Youtube
 - [A simple Guide to "The Dining Philosopher Problem](https://www.youtube.com/watch?v=Dt51GebwNR0&pp=ygUPcGhpbG9zb3BoZXJzIDQy)
+- [CodeVault - Unix Threads in C - Playlist](https://www.youtube.com/playlist?list=PLfqABt5AS4FmuQf70psXrsMLEDQXNkLq2)
 
 Wikipedia
 - [Concurrency](https://en.wikipedia.org/wiki/Concurrency_(computer_science))
