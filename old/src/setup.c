@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftomazc < ftomaz-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: ftomaz-c <ftomaz-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 11:05:52 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/02 16:02:59 by ftomazc          ###   ########.fr       */
+/*   Updated: 2024/04/22 17:09:33 by ftomaz-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,15 @@
 
 void	cleanup_simulation(t_sim *sim)
 {
+	int	i;
+
+	i = 0;
+	while (i < sim->num_of_philos)
+	{
+		pthread_mutex_destroy(sim->forks[i].mutex);
+		free(sim->forks[i].mutex);
+		i++;
+	}
 	if (sim->forks)
 		free(sim->forks);
 	if (sim->philosophers)
@@ -51,7 +60,6 @@ void	config_sim(t_sim *sim, char **argv)
 int	setup_simulation(t_sim *sim, char **args)
 {
 	config_sim(sim, args);
-	gettimeofday(&sim->sim_time, NULL);
 	sim->philosophers = malloc(sim->num_of_philos * sizeof(t_philo));
 	if (!sim->philosophers)
 		return (0);
@@ -60,6 +68,9 @@ int	setup_simulation(t_sim *sim, char **args)
 		return (0);
 	sim->threads = malloc(sim->num_of_philos * sizeof(pthread_t));
 	if (!sim->threads)
+		return (0);
+	sim->print_mesage = malloc(sizeof(pthread_mutex_t));
+	if (pthread_mutex_init(sim->print_mesage, NULL) != 0)
 		return (0);
 	return (1);
 }
