@@ -6,97 +6,66 @@
 /*   By: ftomazc < ftomaz-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 11:07:52 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/03/20 17:38:30 by ftomazc          ###   ########.fr       */
+/*   Updated: 2024/04/02 17:34:48 by ftomazc          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../includes/philo.h"
+#include "../includes/philo.h"
 
-void	philosopher_is_eating(t_sim *sim, t_philo *philo)
+void	acquire_fork(t_fork *fork, t_philo *philo, char *fork_side)
 {
-	long	time;
-
-	if (philo->left_fork && philo->right_fork)
+	pthread_mutex_lock(&fork->mutex);
+	if (!fork->clean)
 	{
-		pthread_mutex_lock(&philo->left_fork->mutex);
-		pthread_mutex_lock(&philo->right_fork->mutex);
-		philo->time_since_last_meal = elapsed_time(sim);
-		time = philo->time_since_last_meal;
-		printf("%li\t Philosopher %i is eating\n", time, philo->id);
-		usleep(sim->time_to_eat * 1000);
-		philo->meals_eaten++;
-		philo->left_fork->clean = false;
-		philo->right_fork->clean = false;
-		pthread_mutex_unlock(&philo->left_fork->mutex);
-		pthread_mutex_unlock(&philo->right_fork->mutex);
+		printf("%li\t Philosopher %i is cleaning the %s fork\n",
+			elapsed_time(philo->sim), philo->id, fork_side);
+		fork->clean = true;
 	}
+	printf("%li\t Philosopher %i has taken the %s fork\n",
+		elapsed_time(philo->sim), philo->id, fork_side);
 }
 
-void	philosopher_is_sleeping(t_sim *sim, t_philo *philo)
+void	philosopher_eats(t_philo *philo)
+{
+	t_sim	*sim;
+	int		left_id;
+	int		right_id;
+	long	time;
+
+
+	sim = philo->sim;
+	left_id = philo->id;
+	right_id = (philo->id + 1) % sim->num_of_philos;
+	if (philo->id == sim->num_of_philos - 1)
+	{
+		acquire_fork(&sim->forks[right_id], philo, "right");
+		acquire_fork(&sim->forks[left_id], philo, "left");
+	}
+	else
+	{
+		acquire_fork(&sim->forks[left_id], philo, "left");
+		acquire_fork(&sim->forks[right_id], philo, "right");
+	}
+	time = elapsed_time(sim);
+	philo->time_since_last_meal = elapsed_time(sim);
+	printf("%li\t Philosopher %i is eating\n", time, philo->id);
+	usleep(sim->time_to_eat * 1000);
+	//printf("%i eating time: %li\n", philo->id, elapsed_time(sim) - time);
+	philo->meals_eaten++;
+	sim->forks[left_id].clean = false;
+	sim->forks[right_id].clean = false;
+	pthread_mutex_unlock(&sim->forks[left_id].mutex);
+	pthread_mutex_unlock(&sim->forks[right_id].mutex);
+}
+
+void	philosopher_sleeps(t_sim *sim, t_philo *philo)
 {
 	long	time;
 
 	time = elapsed_time(sim);
 	printf("%li\t Philosopher %i is sleeping\n", time, philo->id);
 	usleep(sim->time_to_sleep * 1000);
-}
-
-void	philosopher_requests_handling(t_sim *sim, t_philo *philo)
-{
-	int		left_id;
-	int		right_id;
-
-	left_id = (philo->id + 1) % sim->num_of_philos;
-	right_id = (philo->id - 1 + sim->num_of_philos) % sim->num_of_philos;
-	if (philo->left_fork && philo->left_fork->req_by_right 
-	&& !philo->left_fork->clean)
-	{
-		pthread_mutex_lock(&philo->left_fork->mutex);
-		philo->left_fork->req_by_right = false;
-		sim->philosophers[right_id].right_fork = philo->left_fork;
-		sim->philosophers[right_id].right_fork->clean = true;
-		philo->left_fork = NULL;
-		pthread_mutex_unlock(&sim->philosophers[right_id].right_fork->mutex);
-	}
-	if (philo->right_fork && philo->right_fork->req_by_left 
-	&& !philo->right_fork->clean)
-	{
-		pthread_mutex_lock(&philo->right_fork->mutex);
-		philo->right_fork->req_by_left = false;
-		sim->philosophers[left_id].left_fork = philo->right_fork;
-		sim->philosophers[left_id].left_fork->clean = true;
-		philo->right_fork = NULL;
-		pthread_mutex_unlock(&sim->philosophers[left_id].left_fork->mutex);
-	}
-}
-
-void	philosopher_fork_request(t_sim *sim, t_philo *philo)
-{
-	long	time;
-	int		left_id;
-	int		right_id;
-
-	left_id = (philo->id + 1) % sim->num_of_philos;
-	right_id = (philo->id - 1 + sim->num_of_philos) % sim->num_of_philos;
-	time = elapsed_time(sim);
-	if (!philo->left_fork)
-	{
-		pthread_mutex_lock(&sim->forks[left_id].mutex);
-		if (!sim->forks[left_id].req_by_right)
-			sim->forks[left_id].req_by_right = true;
-		pthread_mutex_unlock(&sim->forks[left_id].mutex);
-		philo->waiting_for_forks = true;
-		printf("%li\t Philosopher %i requested left fork\n", time, philo->id);
-	}
-	if (!philo->right_fork)
-	{
-		pthread_mutex_lock(&sim->forks[right_id].mutex);
-		if (!sim->forks[right_id].req_by_left)
-			sim->forks[right_id].req_by_left = true;
-		pthread_mutex_unlock(&sim->forks[right_id].mutex);
-		philo->waiting_for_forks = true;
-		printf("%li\t Philosopher %i requested right fork\n", time, philo->id);
-	}
+	//printf("%i sleeped time: %li\n", philo->id, elapsed_time(sim) - time);
 }
 
 void	philosopher_dies(t_sim *sim, t_philo *philo)

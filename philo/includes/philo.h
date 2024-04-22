@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ftomazc < ftomaz-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/02 16:21:23 by ftomazc           #+#    #+#             */
+/*   Updated: 2024/04/20 18:16:54 by ftomazc          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 
@@ -19,24 +31,11 @@
 /*error.c*/
 void	error_message(int err, char *str);
 void	usage_message(void);
-int		error_check(int	argc, char **argv);
+int		error_check(int argc, char **argv);
 
 /*setup.c*/
-void	cleanup_simulation(t_sim *sim);
-void	config_sim(t_sim *sim, char **argv);
 int		setup_simulation(t_sim *sim, char **args);
-
-/*routine.c*/
-void	*philosopher_routine(void *arg);
-int		init_forks(t_fork *forks, int num_of_forks);
-int		init_philosophers(t_sim *sim, t_philo *philo, int i);
-int		start_simulation(t_sim *sim);
-
-/*actions.c*/
-void	philosopher_is_eating(t_sim *sim, t_philo *philo);
-void	philosopher_is_sleeping(t_sim *sim, t_philo *philo);
-void	philosopher_requests_handling(t_sim *sim, t_philo *philo);
-void	philosopher_fork_request(t_sim *sim, t_philo *philo);
-void	philosopher_dies(t_sim *sim, t_philo *philo);
+int		config_sim(t_sim *sim, char **argv);
+void	cleanup_simulation(t_sim *sim);
 
 #endif

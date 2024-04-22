@@ -2,8 +2,6 @@ NAME := philo
 
 SRC :=	src/main.c \
 		src/error.c \
-		src/routine.c \
-		src/actions.c \
 		src/setup.c \
 		src/utils/utils1.c \
 		src/utils/utils2.c \
