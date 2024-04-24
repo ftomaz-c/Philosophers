@@ -6,7 +6,7 @@
 /*   By: ftomazc < ftomaz-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 11:07:18 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/24 12:28:21 by ftomazc          ###   ########.fr       */
+/*   Updated: 2024/04/24 14:26:47 by ftomazc          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ void	*philosopher_routine(void *arg)
 	philo = (t_philo *)arg;
 	sim = philo->sim;
 	gettimeofday(&sim->sim_time, NULL);
+	if (philo->id % 2 != 0)
+		usleep(1000);
 	while (!sim->sim_stop && (philo->meals_eaten < sim->philos_meal_count
 			|| !philo->died))
 	{
@@ -35,7 +37,6 @@ void	*philosopher_routine(void *arg)
 		philosopher_thinks(sim, philo);
 		if (sim->sim_stop || philo->philo_stop)
 			break ;
-		usleep(100);
 	}
 	return (NULL);
 }
@@ -69,6 +70,11 @@ int	init_philosophers(t_sim *sim, t_philo *philo, int i)
 	philo[i].philo_stop = false;
 	philo[i].right_id = i;
 	philo[i].left_id = (i + 1) % sim->num_of_philos;
+	if (i % 2 != 0)
+	{
+		philo[i].right_id = (i + 1) % sim->num_of_philos;
+		philo[i].left_id = i;
+	}
 	philo[i].right_fork = &sim->forks[philo[i].right_id];
 	philo[i].left_fork = &sim->forks[philo[i].left_id];
 	philo[i].has_left = false;

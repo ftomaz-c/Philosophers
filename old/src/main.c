@@ -6,7 +6,7 @@
 /*   By: ftomazc < ftomaz-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 14:21:30 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/02 16:04:43 by ftomazc          ###   ########.fr       */
+/*   Updated: 2024/04/24 15:06:00 by ftomazc          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	main(int argc, char **argv)
 		ft_putstr_fd("Failed to start simulation.\n", STDERR_FILENO);
 		exit(EXIT_FAILURE);
 	}
-	print_stats(&sim, sim.philosophers);
+	//print_stats(&sim, sim.philosophers);
 	cleanup_simulation(&sim);
 	return (EXIT_SUCCESS);
 }

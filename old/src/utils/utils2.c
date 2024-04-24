@@ -6,7 +6,7 @@
 /*   By: ftomazc < ftomaz-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 11:06:32 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/23 14:55:55 by ftomazc          ###   ########.fr       */
+/*   Updated: 2024/04/24 15:04:02 by ftomazc          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,14 @@ void	print_log(char *action, t_philo *philo)
 
 	pthread_mutex_lock(philo->sim->print_lock);
 	time = elapsed_time(philo->sim);
-	printf("%li\t Philosopher %i %s\n", time, philo->id,
-		action);
+	if (philo->sim->sim_stop)
+	{
+		if (philo->died)
+			printf("%li\t Philosopher %i %s\n", time, philo->id, action);
+		pthread_mutex_unlock(philo->sim->print_lock);
+		return ;
+	}
+	printf("%li\t Philosopher %i %s\n", time, philo->id, action);
 	pthread_mutex_unlock(philo->sim->print_lock);
 }
 

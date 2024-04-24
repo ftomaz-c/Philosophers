@@ -6,7 +6,7 @@
 /*   By: ftomazc < ftomaz-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 11:07:52 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/24 12:16:01 by ftomazc          ###   ########.fr       */
+/*   Updated: 2024/04/24 15:05:05 by ftomazc          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,24 +33,21 @@ void	handle_forks(t_sim *sim, t_philo *philo)
 		}
 		if (philo->has_right && philo->has_left)
 			break ;
-		usleep(1000);
 	}
 }
 
 void	philosopher_eats(t_sim *sim, t_philo *philo)
 {
-	printf(PINK"-----%i time without eating before acquiring fork: %li\n"
+	/*printf(PINK"-----%i time without eating before acquiring fork: %li\n"
 		DEFAULT, philo->id, elapsed_time(philo->sim)
-		- philo->time_since_last_meal);
+		- philo->time_since_last_meal);*/
 	handle_forks(sim, philo);
-	printf(PINK"-----%i time without eating after acquiring fork: %li\n"
+	/*printf(PINK"-----%i time without eating after acquiring fork: %li\n"
 		DEFAULT, philo->id, elapsed_time(philo->sim)
-		- philo->time_since_last_meal);
+		- philo->time_since_last_meal);*/
+	philosopher_dies(sim, philo);
 	if (sim->sim_stop)
-	{
-		free_queue(sim);
 		return ;
-	}
 	philo->time_since_last_meal = elapsed_time(philo->sim);
 	print_log("is eating", philo);
 	usleep(philo->sim->time_to_eat * 1000);
