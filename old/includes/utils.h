@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftomaz-c <ftomaz-c@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftomazc < ftomaz-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 17:21:52 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/22 17:18:28 by ftomaz-c         ###   ########.fr       */
+/*   Updated: 2024/04/23 12:26:18 by ftomazc          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,5 +76,6 @@ int		ft_atoi(char *str);
 long	elapsed_time(t_sim *sim);
 void	print_stats(t_sim *sim, t_philo *philo);
 void	print_philo_stats(t_sim *sim, t_philo *philo);
+void	print_log(char *action, t_philo *philo);
 
 #endif

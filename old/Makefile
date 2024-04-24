@@ -4,6 +4,8 @@ SRC :=	src/main.c \
 		src/error.c \
 		src/setup.c \
 		src/actions.c \
+		src/actions_utils.c \
+		src/queue.c \
 		src/routine.c \
 		src/utils/utils1.c \
 		src/utils/utils2.c \

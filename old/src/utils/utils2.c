@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftomaz-c <ftomaz-c@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftomazc < ftomaz-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 11:06:32 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/22 17:16:24 by ftomaz-c         ###   ########.fr       */
+/*   Updated: 2024/04/23 14:55:55 by ftomazc          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,21 @@
 long	elapsed_time(t_sim *sim)
 {
 	struct timeval	p_time;
-	long			time;
 
 	gettimeofday(&p_time, NULL);
-	time = (p_time.tv_sec - sim->sim_time.tv_sec) * 1000
-		+ (p_time.tv_usec - sim->sim_time.tv_usec) / 1000;
-	return (time);
+	return ((p_time.tv_sec - sim->sim_time.tv_sec) * 1000
+		+ (p_time.tv_usec - sim->sim_time.tv_usec) / 1000);
+}
+
+void	print_log(char *action, t_philo *philo)
+{
+	long	time;
+
+	pthread_mutex_lock(philo->sim->print_lock);
+	time = elapsed_time(philo->sim);
+	printf("%li\t Philosopher %i %s\n", time, philo->id,
+		action);
+	pthread_mutex_unlock(philo->sim->print_lock);
 }
 
 void	print_stats(t_sim *sim, t_philo *philo)

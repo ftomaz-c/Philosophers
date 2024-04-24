@@ -3,71 +3,94 @@
 /*                                                        :::      ::::::::   */
 /*   actions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftomaz-c <ftomaz-c@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftomazc < ftomaz-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 11:07:52 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/22 17:16:41 by ftomaz-c         ###   ########.fr       */
+/*   Updated: 2024/04/24 12:16:01 by ftomazc          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-void	print_action(char *action, long time, t_philo *philo)
+void	handle_forks(t_sim *sim, t_philo *philo)
 {
-	pthread_mutex_lock(philo->sim->print_mesage);
-	printf("%li\t Philosopher %i %s\n", time, philo->id, action);
-	pthread_mutex_unlock(philo->sim->print_mesage);
+	add_new_request(sim, philo);
+	while (!sim->sim_stop)
+	{
+		if (!philo->has_right && sim->queues[philo->right_id]
+			&& sim->queues[philo->right_id]->philosopher_id == philo->id)
+		{
+			acquire_right_fork(sim, philo);
+			del_request(sim, philo->right_id);
+			philo->has_right = true;
+		}
+		if (!philo->has_left && sim->queues[philo->left_id]
+			&& sim->queues[philo->left_id]->philosopher_id == philo->id)
+		{
+			acquire_left_fork(sim, philo);
+			del_request(sim, philo->left_id);
+			philo->has_left = true;
+		}
+		if (philo->has_right && philo->has_left)
+			break ;
+		usleep(1000);
+	}
 }
 
-void	acquire_fork(t_fork *fork)
+void	philosopher_eats(t_sim *sim, t_philo *philo)
 {
-	pthread_mutex_lock(fork->mutex);
-}
-
-void	philosopher_eats(t_philo *philo)
-{
-	int		left_id;
-	int		right_id;
-	long	time;
-
-	left_id = philo->id;
-	right_id = (philo->id + 1) % philo->sim->num_of_philos;
-	if (philo->id == philo->sim->num_of_philos - 1)
+	printf(PINK"-----%i time without eating before acquiring fork: %li\n"
+		DEFAULT, philo->id, elapsed_time(philo->sim)
+		- philo->time_since_last_meal);
+	handle_forks(sim, philo);
+	printf(PINK"-----%i time without eating after acquiring fork: %li\n"
+		DEFAULT, philo->id, elapsed_time(philo->sim)
+		- philo->time_since_last_meal);
+	if (sim->sim_stop)
 	{
-		acquire_fork(&philo->sim->forks[right_id]);
-		acquire_fork(&philo->sim->forks[left_id]);
+		free_queue(sim);
+		return ;
 	}
-	else
-	{
-		acquire_fork(&philo->sim->forks[left_id]);
-		acquire_fork(&philo->sim->forks[right_id]);
-	}
-	time = elapsed_time(philo->sim);
-	philo->time_since_last_meal = time;
-	if (!philo->sim->sim_stop)
-		print_action("is eating", time, philo);
+	philo->time_since_last_meal = elapsed_time(philo->sim);
+	print_log("is eating", philo);
 	usleep(philo->sim->time_to_eat * 1000);
 	philo->meals_eaten++;
-	pthread_mutex_unlock(philo->sim->forks[left_id].mutex);
-	pthread_mutex_unlock(philo->sim->forks[right_id].mutex);
+	drop_forks(philo);
+	if (sim->philos_meal_count != 0 && (sim->philos_meal_count
+			== philo->meals_eaten))
+		philo->philo_stop = true;
 }
 
 void	philosopher_sleeps(t_sim *sim, t_philo *philo)
 {
-	long	time;
-
-	time = elapsed_time(sim);
 	if (!sim->sim_stop)
-		print_action("is sleeping", time, philo);
+		print_log("is sleeping", philo);
 	usleep(sim->time_to_sleep * 1000);
+	/*if (philo->id == 1)
+		printf(BLUE"-----%i sleeped time: %li\n"DEFAULT, philo->id,
+			elapsed_time(sim) - time);*/
+}
+
+void	philosopher_thinks(t_sim *sim, t_philo *philo)
+{
+	(void)sim;
+	print_log("is thinking", philo);
 }
 
 void	philosopher_dies(t_sim *sim, t_philo *philo)
 {
-	long	time;
-
-	sim->sim_stop = true;
-	philo->died = true;
-	time = elapsed_time(sim);
-	print_action("died", time, philo);
+	if (sim->sim_stop)
+		return ;
+	if ((elapsed_time(sim) - philo->time_since_last_meal)
+		>= sim->time_to_die || sim->num_of_philos == 1)
+	{
+		/*printf(RED"-----%i time without eating: %li\n"DEFAULT, philo->id,
+			elapsed_time(sim) - philo->time_since_last_meal);*/
+		if (sim->num_of_philos == 1)
+			usleep(sim->time_to_die * 1000);
+		sim->sim_stop = true;
+		philo->died = true;
+		print_log("died", philo);
+	}
+	return ;
 }

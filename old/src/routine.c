@@ -3,29 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftomaz-c <ftomaz-c@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ftomazc < ftomaz-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 11:07:18 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/22 17:16:32 by ftomaz-c         ###   ########.fr       */
+/*   Updated: 2024/04/24 12:28:21 by ftomazc          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
-
-bool	all_philosophers_satisfied(t_sim *sim)
-{
-	int	i;
-
-	i = 0;
-	while (i < sim->num_of_philos)
-	{
-		if (sim->philosophers[i].meals_eaten < sim->philos_meal_count)
-			return (false);
-		i++;
-	}
-	return (true);
-}
-
 
 void	*philosopher_routine(void *arg)
 {
@@ -34,25 +19,23 @@ void	*philosopher_routine(void *arg)
 
 	philo = (t_philo *)arg;
 	sim = philo->sim;
-	if (sim->sim_time.tv_sec == 0 && sim->sim_time.tv_usec == 0)
-		gettimeofday(&sim->sim_time, NULL);
+	gettimeofday(&sim->sim_time, NULL);
 	while (!sim->sim_stop && (philo->meals_eaten < sim->philos_meal_count
 			|| !philo->died))
 	{
-		print_action("is thinking", elapsed_time(sim), philo);
-		if ((elapsed_time(sim) - philo->time_since_last_meal)
-			>= sim->time_to_die || sim->num_of_philos == 1 )
-		{
-			if (sim->num_of_philos == 1)
-				usleep(sim->time_to_die * 1000);
-			philosopher_dies(sim, philo);
+		philosopher_dies(sim, philo);
+		if (sim->sim_stop || philo->philo_stop)
 			break ;
-		}
-		if (sim->philos_meal_count != 0 && (sim->philos_meal_count
-			== philo->meals_eaten))
+		philosopher_eats(sim, philo);
+		if (sim->sim_stop || philo->philo_stop)
 			break ;
-		philosopher_eats(philo);
 		philosopher_sleeps(sim, philo);
+		if (sim->sim_stop || philo->philo_stop)
+			break ;
+		philosopher_thinks(sim, philo);
+		if (sim->sim_stop || philo->philo_stop)
+			break ;
+		usleep(100);
 	}
 	return (NULL);
 }
@@ -83,6 +66,13 @@ int	init_philosophers(t_sim *sim, t_philo *philo, int i)
 	philo[i].time_since_last_meal = 0;
 	philo[i].died = false;
 	philo[i].sim = sim;
+	philo[i].philo_stop = false;
+	philo[i].right_id = i;
+	philo[i].left_id = (i + 1) % sim->num_of_philos;
+	philo[i].right_fork = &sim->forks[philo[i].right_id];
+	philo[i].left_fork = &sim->forks[philo[i].left_id];
+	philo[i].has_left = false;
+	philo[i].has_right = false;
 	return (1);
 }
 
