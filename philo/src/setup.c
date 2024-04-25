@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftomazc < ftomaz-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: ftomaz-c <ftomaz-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 11:05:52 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/20 18:18:43 by ftomazc          ###   ########.fr       */
+/*   Updated: 2024/04/25 18:51:48 by ftomaz-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,38 @@
 
 void	cleanup_simulation(t_sim *sim)
 {
+	int	i;
+
 	if (sim->philosophers)
 		free(sim->philosophers);
 	if (sim->threads)
 		free(sim->threads);
+	if (sim->print_lock)
+	{
+		pthread_mutex_destroy(sim->print_lock);
+		free(sim->print_lock);
+	}
+	i = 0;
+	while (i < sim->num_of_philos)
+	{
+		if (sim->forks[i].mutex)
+		{
+			pthread_mutex_destroy(sim->forks[i].mutex);
+			free(sim->forks[i].mutex);
+		}
+		i++;
+	}
+	if (sim->forks)
+		free(sim->forks);
+	pthread_mutex_destroy(sim->sim_lock);
+	free(sim->sim_lock);
 }
 
 int	config_sim(t_sim *sim, char **argv)
 {
+	int	i;
+
+	i = 0;
 	sim->num_of_philos = ft_atoi(argv[1]);
 	sim->time_to_die = ft_atoi(argv[2]);
 	sim->time_to_eat = ft_atoi(argv[3]);
@@ -37,34 +61,11 @@ int	config_sim(t_sim *sim, char **argv)
 	if (sim->num_of_philos <= 0 || sim->time_to_die <= 0
 		|| sim->time_to_eat <= 0 || sim->time_to_sleep <= 0)
 		return (0);
-	sim->sim_stop = false;
-	return (1);
-}
-
-int	config_manager(t_sim *sim, t_fork_manager *fork_manager)
-{
-	int	num_forks;
-	int	i;
-
-	fork_manager->num_of_forks = sim->num_of_philos;
-	num_forks = fork_manager->num_of_forks;
-	fork_manager->request_queue = malloc(num_forks * sizeof(t_request *));
-	if (!fork_manager->request_queue)
-		return(0);
-	fork_manager->is_available = malloc(num_forks * sizeof(bool));
-	if (!fork_manager->is_available)
-		return(0);
-	fork_manager->fork_mutexes = malloc(num_forks * sizeof(pthread_mutex_t));
-	if (!fork_manager->fork_mutexes)
+	sim->sim_lock = malloc(sizeof(pthread_mutex_t));
+	if (!sim->sim_lock)
 		return (0);
-	i = 0;
-	while (i < fork_manager->num_of_forks)
-	{
-		fork_manager->request_queue[i] = NULL;
-		fork_manager->is_available[i] = true;
-		pthread_mutex_init(&fork_manager->fork_mutexes[i], NULL);
-		i++;
-	}
+	pthread_mutex_init(sim->sim_lock, NULL);
+	sim->sim_stop = false;
 	return (1);
 }
 
@@ -75,14 +76,17 @@ int	setup_simulation(t_sim *sim, char **args)
 		error_message(4, NULL);
 		exit(EXIT_FAILURE);
 	}
-	gettimeofday(&sim->sim_time, NULL);
 	sim->philosophers = malloc(sim->num_of_philos * sizeof(t_philo));
 	if (!sim->philosophers)
+		return (0);
+	sim->forks = malloc(sim->num_of_philos * sizeof(t_fork));
+	if (!sim->forks)
 		return (0);
 	sim->threads = malloc(sim->num_of_philos * sizeof(pthread_t));
 	if (!sim->threads)
 		return (0);
-	if (!config_manager(sim, sim->fork_manager))
+	sim->print_lock = malloc(sizeof(pthread_mutex_t));
+	if (pthread_mutex_init(sim->print_lock, NULL) != 0)
 		return (0);
 	return (1);
 }

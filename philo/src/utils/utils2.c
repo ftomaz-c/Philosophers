@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftomazc < ftomaz-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: ftomaz-c <ftomaz-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 11:06:32 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/02 17:15:54 by ftomazc          ###   ########.fr       */
+/*   Updated: 2024/04/25 17:40:39 by ftomaz-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,27 @@
 long	elapsed_time(t_sim *sim)
 {
 	struct timeval	p_time;
-	long			time;
 
 	gettimeofday(&p_time, NULL);
-	time = (p_time.tv_sec - sim->sim_time.tv_sec) * 1000
-		+ (p_time.tv_usec - sim->sim_time.tv_usec) / 1000;
-	return (time);
+	return ((p_time.tv_sec - sim->sim_time.tv_sec) * 1000
+		+ (p_time.tv_usec - sim->sim_time.tv_usec) / 1000);
+}
+
+void	print_log(char *action, t_philo *philo)
+{
+	long	time;
+
+	pthread_mutex_lock(philo->sim->print_lock);
+	time = elapsed_time(philo->sim);
+	if (sim_check(philo->sim))
+	{
+		if (philo->died)
+			printf("%li\t %i %s\n", time, philo->id, action);
+		pthread_mutex_unlock(philo->sim->print_lock);
+		return ;
+	}
+	printf("%li\t %i %s\n", time, philo->id, action);
+	pthread_mutex_unlock(philo->sim->print_lock);
 }
 
 void	print_stats(t_sim *sim, t_philo *philo)

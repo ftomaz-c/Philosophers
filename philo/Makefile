@@ -3,6 +3,9 @@ NAME := philo
 SRC :=	src/main.c \
 		src/error.c \
 		src/setup.c \
+		src/sim_init.c \
+		src/sim.c \
+		src/sim_utils.c \
 		src/utils/utils1.c \
 		src/utils/utils2.c \
 
@@ -10,7 +13,8 @@ OBJ := $(SRC:.c=.o)
 
 CC := cc
 
-CFLAGS := -Wall -Wextra -Werror -g
+CFLAGS := -Wall -Wextra -Werror -g -pthread 
+#-fsanitize=thread
 
 GREEN := \033[0;32m
 CYAN := \033[0;36m
