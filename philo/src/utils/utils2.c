@@ -6,7 +6,7 @@
 /*   By: ftomaz-c <ftomaz-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 11:06:32 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/25 17:40:39 by ftomaz-c         ###   ########.fr       */
+/*   Updated: 2024/04/26 16:02:08 by ftomaz-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,20 @@ void	print_log(char *action, t_philo *philo)
 {
 	long	time;
 
-	pthread_mutex_lock(philo->sim->print_lock);
+	pthread_mutex_lock(&philo->sim->print_lock);
 	time = elapsed_time(philo->sim);
 	if (sim_check(philo->sim))
 	{
-		if (philo->died)
-			printf("%li\t %i %s\n", time, philo->id, action);
-		pthread_mutex_unlock(philo->sim->print_lock);
+		if (philo->died && !philo->sim->philo_died)
+		{
+			philo->sim->philo_died = true;
+			printf("%li\t %i %s\n", time, philo->id + 1, action);
+		}
+		pthread_mutex_unlock(&philo->sim->print_lock);
 		return ;
 	}
-	printf("%li\t %i %s\n", time, philo->id, action);
-	pthread_mutex_unlock(philo->sim->print_lock);
+	printf("%li\t %i %s\n", time, philo->id + 1, action);
+	pthread_mutex_unlock(&philo->sim->print_lock);
 }
 
 void	print_stats(t_sim *sim, t_philo *philo)
@@ -70,7 +73,7 @@ void	print_philo_stats(t_sim *sim, t_philo *philo)
 {
 	int	i;
 
-	i = 0;
+	i = 1;
 	while (i < sim->num_of_philos)
 	{
 		printf("\t-");

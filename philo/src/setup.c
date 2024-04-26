@@ -6,7 +6,7 @@
 /*   By: ftomaz-c <ftomaz-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 11:05:52 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/25 18:51:48 by ftomaz-c         ###   ########.fr       */
+/*   Updated: 2024/04/26 20:03:11 by ftomaz-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,25 +20,16 @@ void	cleanup_simulation(t_sim *sim)
 		free(sim->philosophers);
 	if (sim->threads)
 		free(sim->threads);
-	if (sim->print_lock)
-	{
-		pthread_mutex_destroy(sim->print_lock);
-		free(sim->print_lock);
-	}
+	pthread_mutex_destroy(&sim->print_lock);
 	i = 0;
 	while (i < sim->num_of_philos)
 	{
-		if (sim->forks[i].mutex)
-		{
-			pthread_mutex_destroy(sim->forks[i].mutex);
-			free(sim->forks[i].mutex);
-		}
+		pthread_mutex_destroy(&sim->forks[i].mutex);
 		i++;
 	}
 	if (sim->forks)
 		free(sim->forks);
-	pthread_mutex_destroy(sim->sim_lock);
-	free(sim->sim_lock);
+	pthread_mutex_destroy(&sim->sim_lock);
 }
 
 int	config_sim(t_sim *sim, char **argv)
@@ -61,11 +52,10 @@ int	config_sim(t_sim *sim, char **argv)
 	if (sim->num_of_philos <= 0 || sim->time_to_die <= 0
 		|| sim->time_to_eat <= 0 || sim->time_to_sleep <= 0)
 		return (0);
-	sim->sim_lock = malloc(sizeof(pthread_mutex_t));
-	if (!sim->sim_lock)
-		return (0);
-	pthread_mutex_init(sim->sim_lock, NULL);
+	pthread_mutex_init(&sim->sim_lock, NULL);
 	sim->sim_stop = false;
+	sim->philo_died = false;
+	sim->philos_full = 0;
 	return (1);
 }
 
@@ -85,8 +75,7 @@ int	setup_simulation(t_sim *sim, char **args)
 	sim->threads = malloc(sim->num_of_philos * sizeof(pthread_t));
 	if (!sim->threads)
 		return (0);
-	sim->print_lock = malloc(sizeof(pthread_mutex_t));
-	if (pthread_mutex_init(sim->print_lock, NULL) != 0)
+	if (pthread_mutex_init(&sim->print_lock, NULL) != 0)
 		return (0);
 	return (1);
 }

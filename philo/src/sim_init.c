@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   routine.c                                          :+:      :+:    :+:   */
+/*   sim_init.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ftomaz-c <ftomaz-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 11:07:18 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/25 19:08:16 by ftomaz-c         ###   ########.fr       */
+/*   Updated: 2024/04/26 20:01:23 by ftomaz-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@ int	init_forks(t_fork *forks, int num_of_forks)
 	i = 0;
 	while (i < num_of_forks)
 	{
-		forks[i].mutex = malloc(sizeof(pthread_mutex_t));
-		if (pthread_mutex_init(forks[i].mutex, NULL) != 0)
+		if (pthread_mutex_init(&forks[i].mutex, NULL) != 0)
 		{
 			ft_putstr_fd("Error: Failed to initiate fork's mutex\n",
 				STDERR_FILENO);

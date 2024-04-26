@@ -6,7 +6,7 @@
 /*   By: ftomaz-c <ftomaz-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 16:30:51 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/25 18:52:23 by ftomaz-c         ###   ########.fr       */
+/*   Updated: 2024/04/26 20:03:24 by ftomaz-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,14 @@ typedef struct s_sim
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				philos_meal_count;
+	int				philos_full;
 	bool			sim_stop;
+	bool			philo_died;
 	struct timeval	sim_time;
-	pthread_mutex_t	*print_lock;
+	pthread_mutex_t	print_lock;
 	t_philo			*philosophers;
 	t_fork			*forks;
-	pthread_mutex_t	*sim_lock;
+	pthread_mutex_t	sim_lock;
 	pthread_t		*threads;
 }	t_sim;
 
@@ -51,16 +53,9 @@ typedef struct s_philo
 	t_sim	*sim;
 }	t_philo;
 
-typedef struct s_request
-{
-	int					philosopher_id;
-	int					fork_id;
-	struct s_request	*next;
-}	t_request;
-
 typedef struct s_fork
 {
-	pthread_mutex_t	*mutex;
+	pthread_mutex_t	mutex;
 }	t_fork;
 
 #endif

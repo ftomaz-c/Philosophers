@@ -13,8 +13,7 @@ OBJ := $(SRC:.c=.o)
 
 CC := cc
 
-CFLAGS := -Wall -Wextra -Werror -g -pthread 
-#-fsanitize=thread
+CFLAGS := -Wall -Wextra -Werror -g #-pthread -fsanitize=thread
 
 GREEN := \033[0;32m
 CYAN := \033[0;36m

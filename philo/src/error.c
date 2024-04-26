@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ftomazc < ftomaz-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: ftomaz-c <ftomaz-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 15:25:59 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/02 16:55:57 by ftomazc          ###   ########.fr       */
+/*   Updated: 2024/04/26 19:20:29 by ftomaz-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	usage_message(void)
 {
 	char	*usage_message;
 
-	usage_message = YELLOW"Usage: ./philo arg1 arg2 arg3 arg4 [arg5 (optional)]\
+	usage_message = GREEN"Usage: ./philo arg1 arg2 arg3 arg4 [arg5 (optional)]\
 	\n"DEFAULT
 		"arg1: number_of_philosophers\n"
 		"arg2: time_to_die (in msec)\n"
