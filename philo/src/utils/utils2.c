@@ -6,7 +6,7 @@
 /*   By: ftomaz-c <ftomaz-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 11:06:32 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/26 16:02:08 by ftomaz-c         ###   ########.fr       */
+/*   Updated: 2024/04/30 20:27:59 by ftomaz-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,10 @@ void	print_log(char *action, t_philo *philo)
 {
 	long	time;
 
-	pthread_mutex_lock(&philo->sim->print_lock);
 	time = elapsed_time(philo->sim);
-	if (sim_check(philo->sim))
+	pthread_mutex_lock(&philo->sim->print_lock);
+	if (philo->sim->philos_full == philo->sim->num_of_philos)
 	{
-		if (philo->died && !philo->sim->philo_died)
-		{
-			philo->sim->philo_died = true;
-			printf("%li\t %i %s\n", time, philo->id + 1, action);
-		}
 		pthread_mutex_unlock(&philo->sim->print_lock);
 		return ;
 	}
@@ -54,7 +49,7 @@ void	print_stats(t_sim *sim, t_philo *philo)
 	printf("\t-      Time to sleep:\t\t%i              -\n",
 		sim->time_to_sleep);
 	printf("\t-      Time to die:\t\t%i              -\n", sim->time_to_die);
-	printf("\t-      Num. of Meals:\t\t%i                -\n",
+	printf("\t-      Num. of Meals:\t\t%i               -\n",
 		sim->philos_meal_count);
 	if (sim->philos_meal_count == 0)
 		printf("\t-                          0 - no limit of meals -\n");
@@ -73,7 +68,7 @@ void	print_philo_stats(t_sim *sim, t_philo *philo)
 {
 	int	i;
 
-	i = 1;
+	i = 0;
 	while (i < sim->num_of_philos)
 	{
 		printf("\t-");
@@ -81,7 +76,7 @@ void	print_philo_stats(t_sim *sim, t_philo *philo)
 			printf(RED"   X  ");
 		else
 			printf(GREEN"      ");
-		printf("Philosopher %i\t\t%i\tmeals    "DEFAULT, philo[i].id,
+		printf("Philosopher %i\t\t%i\tmeals    "DEFAULT, philo[i].id + 1,
 			philo[i].meals_eaten);
 		printf("-\n");
 		i++;

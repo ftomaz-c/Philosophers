@@ -6,7 +6,7 @@
 /*   By: ftomaz-c <ftomaz-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 16:21:23 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/26 19:24:02 by ftomaz-c         ###   ########.fr       */
+/*   Updated: 2024/04/30 18:07:54 by ftomaz-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void		philosopher_dies(t_sim *sim, t_philo *philo);
 void		*philosopher_routine(void *arg);
 
 /*sim_utils.c*/
-int			philo_died(t_sim *sim, t_philo *philo);
+int			philo_check(t_sim *sim, t_philo *philo);
 int			sim_check(t_sim *sim);
 void		acquire_right_fork(t_philo *philo);
 void		acquire_left_fork(t_philo *philo);

@@ -6,7 +6,7 @@
 /*   By: ftomaz-c <ftomaz-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 11:05:52 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/26 20:03:11 by ftomaz-c         ###   ########.fr       */
+/*   Updated: 2024/04/30 18:32:43 by ftomaz-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ void	cleanup_simulation(t_sim *sim)
 
 	if (sim->philosophers)
 		free(sim->philosophers);
-	if (sim->threads)
-		free(sim->threads);
 	pthread_mutex_destroy(&sim->print_lock);
 	i = 0;
 	while (i < sim->num_of_philos)
@@ -71,9 +69,6 @@ int	setup_simulation(t_sim *sim, char **args)
 		return (0);
 	sim->forks = malloc(sim->num_of_philos * sizeof(t_fork));
 	if (!sim->forks)
-		return (0);
-	sim->threads = malloc(sim->num_of_philos * sizeof(pthread_t));
-	if (!sim->threads)
 		return (0);
 	if (pthread_mutex_init(&sim->print_lock, NULL) != 0)
 		return (0);
