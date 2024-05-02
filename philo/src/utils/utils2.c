@@ -6,7 +6,7 @@
 /*   By: ftomaz-c <ftomaz-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 11:06:32 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/30 20:27:59 by ftomaz-c         ###   ########.fr       */
+/*   Updated: 2024/05/02 19:50:45 by ftomaz-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,16 @@ long	elapsed_time(t_sim *sim)
 
 void	print_log(char *action, t_philo *philo)
 {
-	long	time;
-
-	time = elapsed_time(philo->sim);
 	pthread_mutex_lock(&philo->sim->print_lock);
+	pthread_mutex_lock(&philo->sim->sim_lock);
 	if (philo->sim->philos_full == philo->sim->num_of_philos)
 	{
+		pthread_mutex_unlock(&philo->sim->sim_lock);
 		pthread_mutex_unlock(&philo->sim->print_lock);
 		return ;
 	}
-	printf("%li\t %i %s\n", time, philo->id + 1, action);
+	pthread_mutex_unlock(&philo->sim->sim_lock);
+	printf("%li\t %i %s\n", elapsed_time(philo->sim), philo->id + 1, action);
 	pthread_mutex_unlock(&philo->sim->print_lock);
 }
 
@@ -51,7 +51,7 @@ void	print_stats(t_sim *sim, t_philo *philo)
 	printf("\t-      Time to die:\t\t%i              -\n", sim->time_to_die);
 	printf("\t-      Num. of Meals:\t\t%i               -\n",
 		sim->philos_meal_count);
-	if (sim->philos_meal_count == 0)
+	if (sim->philos_meal_count == -1)
 		printf("\t-                          0 - no limit of meals -\n");
 	printf("\t-                                                -\n");
 	print_philo_stats(sim, philo);

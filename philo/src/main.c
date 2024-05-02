@@ -6,7 +6,7 @@
 /*   By: ftomaz-c <ftomaz-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 14:21:30 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/30 20:07:50 by ftomaz-c         ###   ########.fr       */
+/*   Updated: 2024/05/02 18:26:15 by ftomaz-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,20 @@ int	main(int argc, char **argv)
 	t_sim	sim;
 
 	if (error_check(argc, argv))
-		exit (EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	if (!setup_simulation(&sim, argv))
 	{
-		cleanup_simulation(&sim);
 		ft_putstr_fd("Failed to setup simulation.\n", STDERR_FILENO);
-		exit(EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	}
 	if (!start_simulation(&sim))
 	{
-		cleanup_simulation(&sim);
+		destroy_mutexes(&sim);
 		ft_putstr_fd("Failed to start simulation.\n", STDERR_FILENO);
-		exit(EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	}
-	print_stats(&sim, sim.philosophers);
-	cleanup_simulation(&sim);
+	destroy_mutexes(&sim);
 	return (EXIT_SUCCESS);
 }
+
+//print_stats(&sim, sim.philosophers);

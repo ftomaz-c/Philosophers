@@ -6,7 +6,7 @@
 /*   By: ftomaz-c <ftomaz-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/18 15:25:59 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/26 19:20:29 by ftomaz-c         ###   ########.fr       */
+/*   Updated: 2024/05/02 16:14:00 by ftomaz-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,22 @@ void	error_message(int err, char *str)
 	char	*error_message;
 
 	ft_putstr_fd(RED"Error: ", STDERR_FILENO);
+	if (str)
+		ft_putstr_fd(str, STDERR_FILENO);
 	if (err == 1)
 		error_message = "Not enough arguments provided.\n"DEFAULT;
 	else if (err == 2)
 		error_message = "Too many arguments.\n"DEFAULT;
 	else if (err == 3)
-	{
-		ft_putstr_fd(str, STDERR_FILENO);
 		error_message = " is an invalid argument.\n"DEFAULT;
-	}
 	else if (err == 4)
 		error_message = "Arguments must be positive integers.\n"DEFAULT;
 	else if (err == 5)
 		error_message = "Failed to create thread\n"DEFAULT;
+	else if (err == 6)
+		error_message = " failed to lock\n";
+	else if (err == 7)
+		error_message = " failed to unlock\n";
 	else
 		error_message = "Unexpected error occurred.\n"DEFAULT;
 	ft_putstr_fd(error_message, STDERR_FILENO);

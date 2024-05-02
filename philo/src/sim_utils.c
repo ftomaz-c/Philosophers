@@ -6,30 +6,16 @@
 /*   By: ftomaz-c <ftomaz-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 14:18:18 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/30 20:57:05 by ftomaz-c         ###   ########.fr       */
+/*   Updated: 2024/05/02 21:21:29 by ftomaz-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-int	philo_check(t_sim *sim, t_philo *philo)
+void	custom_usleep(t_sim *sim, long actual_time, long time_to_action)
 {
-	pthread_mutex_lock(&sim->sim_lock);
-	if (sim->philos_full == sim->num_of_philos)
-	{
-		sim->sim_stop = true;
-		pthread_mutex_unlock(&sim->sim_lock);
-		return (1);
-	}
-	if ((elapsed_time(sim) - philo->time_since_last_meal)
-		>= sim->time_to_die)
-	{
-		philosopher_dies(sim, philo);
-		pthread_mutex_unlock(&sim->sim_lock);
-		return (1);
-	}
-	pthread_mutex_unlock(&sim->sim_lock);
-	return (0);
+	while (elapsed_time(sim) < actual_time + time_to_action)
+		usleep(100);
 }
 
 int	sim_check(t_sim *sim)

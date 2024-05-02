@@ -6,7 +6,7 @@
 /*   By: ftomaz-c <ftomaz-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 16:21:23 by ftomazc           #+#    #+#             */
-/*   Updated: 2024/04/30 18:07:54 by ftomaz-c         ###   ########.fr       */
+/*   Updated: 2024/05/02 19:48:44 by ftomaz-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void		usage_message(void);
 int			error_check(int argc, char **argv);
 
 /*setup.c*/
+void		destroy_mutexes(t_sim *sim);
 void		cleanup_simulation(t_sim *sim);
 int			config_sim(t_sim *sim, char **argv);
 int			setup_simulation(t_sim *sim, char **args);
@@ -51,6 +52,11 @@ void		philosopher_sleeps(t_sim *sim, t_philo *philo);
 void		philosopher_thinks(t_sim *sim, t_philo *philo);
 void		philosopher_dies(t_sim *sim, t_philo *philo);
 void		*philosopher_routine(void *arg);
+
+/*sim_god.c*/
+void		*god_routine(void *arg);
+int			philo_check(t_sim *sim, t_philo *philo);
+void		philosopher_dies(t_sim *sim, t_philo *philo);
 
 /*sim_utils.c*/
 int			philo_check(t_sim *sim, t_philo *philo);
